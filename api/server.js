@@ -65,5 +65,47 @@ server.get('/api/users/:id', (req,res) => {
     })
 })
 
+// delete
+
+server.delete('/api/users/:id', (req,res) => {
+    User.remove(req.params.id)
+    .then(removeUser => {
+        if (!removeUser) {
+            res.status(404).json({
+                message: `does not exist`
+            })
+        } else {
+            res.json(removeUser)
+        }
+    })
+    .catch(err => {
+        res.status(500).json({
+            error: `no users found`,
+            message: err.message,
+            stack: err.stack
+        })
+    })
+})
+
+// put
+server.put('/api/users/:id', (req,res) => {
+    const {id} = req.params
+    User.update(id, req.body)
+    .then(editedUser => {
+        if(!editedUser) {
+            res.status(404).json({
+                message: `does not exist`
+            })
+        } else {
+            res.json(editedUser)
+        }
+    })
+    .catch(err => {
+        res.status(500).json({
+            error: `no user found to edit`,
+        })
+    })
+
+})
 
 module.exports = server
